@@ -1,0 +1,13 @@
+{
+  "name": "kb-memory",
+  "version": "0.1.0",
+  "description": "Read/write protocol and ergonomics for a Graphiti-backed memory MCP. Ships a skill (file-vs-graph rule, write triggers, bi-temporal discipline, token-budget heuristics) plus /kb-search and /kb-write slash commands.",
+  "author": {
+    "name": "leotimus",
+    "url": "https://github.com/leotimus"
+  },
+  "homepage": "https://github.com/leotimus/kb-alms",
+  "repository": "https://github.com/leotimus/kb-alms",
+  "license": "MIT",
+  "keywords": ["memory", "graphiti", "mcp", "knowledge-graph"]
+}

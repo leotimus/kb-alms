@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "memory": {
+      "type": "http",
+      "url": "${KB_MEMORY_URL}",
+      "headers": {
+        "Authorization": "Bearer ${MEMORY_MCP_TOKEN}"
+      }
+    }
+  }
+}

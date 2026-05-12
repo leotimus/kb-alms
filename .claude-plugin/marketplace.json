@@ -1,0 +1,20 @@
+{
+  "name": "kb-alms",
+  "owner": {
+    "name": "leotimus",
+    "url": "https://github.com/leotimus"
+  },
+  "metadata": {
+    "description": "Marketplace for the kb-memory Claude Code plugin.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "kb-memory",
+      "source": "./",
+      "description": "Read/write protocol and ergonomics for a Graphiti-backed memory MCP: a skill (file-vs-graph rule, write triggers, bi-temporal discipline, token-budget heuristics) plus /kb-search and /kb-write slash commands.",
+      "category": "memory",
+      "keywords": ["memory", "graphiti", "mcp", "knowledge-graph"]
+    }
+  ]
+}
