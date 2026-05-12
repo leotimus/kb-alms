@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "Marketplace for the kb-memory Claude Code plugin.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "kb-memory",
       "source": "./",
-      "description": "Read/write protocol and ergonomics for a Graphiti-backed memory MCP: a skill (file-vs-graph rule, write triggers, bi-temporal discipline, token-budget heuristics) plus /kb-search and /kb-write slash commands.",
+      "description": "Read/write protocol and ergonomics for a Graphiti-backed memory MCP: a skill (file-vs-graph rule, write triggers, bi-temporal discipline, token-budget heuristics), /kb-search and /kb-write slash commands, and a PreToolUse hook that blocks add_memory writes to indexer-owned canonical groups.",
       "category": "memory",
       "keywords": ["memory", "graphiti", "mcp", "knowledge-graph"]
     }

@@ -12,6 +12,7 @@ It bundles the MCP connection + the protocol Claude should follow into one insta
 | `skills/memory-protocol/SKILL.md` | The rule-of-thumb Claude follows: file-memory vs graph split, when to read, when to write, bi-temporal triggers, token budget, stale-fact handling. |
 | `commands/kb-search.md` | `/kb-search <keywords>` — guided multi-group search across `<project>`, `<project>-docs`, `<project>-notes`, and `team-prefs`. |
 | `commands/kb-write.md` | `/kb-write <type> <body>` — structured `add_memory` to `<project>-notes` (or `team-prefs` for cross-project preferences); never to the indexed canonical groups. Checks for contradictions before writing. |
+| `hooks/hooks.json` + `hooks/guard-add-memory.py` | `PreToolUse` hook on `add_memory` that **blocks** writes to indexer-owned groups. Allows `*-notes`, `team-prefs`, anything in `$KB_WRITE_ALLOWLIST`, or no `group_id` (server falls back to its default); denies the rest with a fix-it message. Fail-open on parse errors. |
 
 ## Requirements
 
@@ -19,8 +20,9 @@ It bundles the MCP connection + the protocol Claude should follow into one insta
 - A reachable Graphiti MCP endpoint (self-hosted or otherwise)
 - `KB_MEMORY_URL` — the MCP URL (e.g. `https://your-graphiti-host/mcp`)
 - `MEMORY_MCP_TOKEN` — bearer token for that endpoint
+- `KB_WRITE_ALLOWLIST` *(optional)* — comma-separated group IDs the write-guard hook should let through in addition to `*-notes` / `team-prefs`. Use it for a deliberate one-off seed of a canonical group.
 
-Export both in your shell (or set them in your Claude env) before starting Claude Code:
+Export both (the allowlist is optional) in your shell — or set them in your Claude env — before starting Claude Code:
 
 ```bash
 export KB_MEMORY_URL=https://your-graphiti-host/mcp
@@ -50,6 +52,8 @@ Verify the MCP is connected:
 
 You should see `memory` listed.
 
-## Scope (v0.1)
+## Scope (v0.2)
 
-Skill + commands only. **No hooks** in this slice — the rules need to settle before automating them. Hooks (`UserPromptSubmit` keyword reminder, `Stop` write-suggestion) are tracked as follow-up work.
+Skill + commands + one hook: the `add_memory` write-guard above. It's deliberately the *only* hook so far — it enforces a hard, well-settled rule (never write the indexer-owned groups) rather than nudging behaviour, and it fails open. Still on the follow-up list: a `UserPromptSubmit` keyword reminder and a `Stop` write-suggestion (both are *nudges*, not invariants, so they wait until the conventions around them settle).
+
+The hook is the **fast-feedback** layer — it only protects sessions that have this plugin installed. The durable wall is server-side: the Graphiti MCP image in `alms-memory` honours `GRAPHITI_PROTECTED_GROUPS` and rejects the same writes for every client. Run both.
