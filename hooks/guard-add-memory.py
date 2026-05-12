@@ -21,8 +21,9 @@ A write is ALLOWED when any of these holds:
 Anything else is denied with an actionable message.
 
 Fail-open by design: any parse/IO error -> allow. A guard must never wedge
-a session. The MCP-server-side guard (`GRAPHITI_PROTECTED_GROUPS`) is the
-hard wall that also covers non-plugin clients; this hook is just fast UX.
+a session. The MCP-server-side guard (`GRAPHITI_WRITE_GUARD=notes-only`,
+on by default) is the hard wall that also covers non-plugin clients; this
+hook is just fast UX.
 """
 
 import json

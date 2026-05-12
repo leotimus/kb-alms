@@ -47,7 +47,7 @@ Two persistent memory systems coexist. Use the right one or both:
 
 The indexed canonical groups (`<project>`, `<project>-docs`) are reserved for the indexer so they stay reproducible from source. Session writes go to `<project>-notes` (project-specific) or `team-prefs` (cross-project). Writing to the canonical groups via `add_memory` silently pollutes the indexed corpus — entity dedup mutates summaries, and bi-temporal contradiction can invalidate correct file-derived edges (the read-many / write-one rule).
 
-This is enforced, not just advised: a `PreToolUse` hook in this plugin **blocks** `add_memory` calls whose `group_id` isn't a `-notes` group / `team-prefs` / on `$KB_WRITE_ALLOWLIST` (and the Graphiti MCP server rejects the same writes via `GRAPHITI_PROTECTED_GROUPS`). If a write is denied, that's the guard working — re-issue it against `<project>-notes`; don't try to route around it.
+This is enforced, not just advised: a `PreToolUse` hook in this plugin **blocks** `add_memory` calls whose `group_id` isn't a `-notes` group / `team-prefs` / on `$KB_WRITE_ALLOWLIST`, and the Graphiti MCP server does the same server-side (`GRAPHITI_WRITE_GUARD=notes-only`, on by default — accepts only `-notes` groups + `GRAPHITI_WRITE_ALLOWLIST`). If a write is denied, that's the guard working — re-issue it against `<project>-notes`; don't try to route around it.
 
 Multi-group queries are cheap: `group_ids=["<project>", "<project>-docs", "<project>-notes", "team-prefs"]`.
 

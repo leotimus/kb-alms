@@ -56,4 +56,4 @@ You should see `memory` listed.
 
 Skill + commands + one hook: the `add_memory` write-guard above. It's deliberately the *only* hook so far — it enforces a hard, well-settled rule (never write the indexer-owned groups) rather than nudging behaviour, and it fails open. Still on the follow-up list: a `UserPromptSubmit` keyword reminder and a `Stop` write-suggestion (both are *nudges*, not invariants, so they wait until the conventions around them settle).
 
-The hook is the **fast-feedback** layer — it only protects sessions that have this plugin installed. The durable wall is server-side: the Graphiti MCP image in `alms-memory` honours `GRAPHITI_PROTECTED_GROUPS` and rejects the same writes for every client. Run both.
+The hook is the **fast-feedback** layer — it only protects sessions that have this plugin installed. The durable wall is server-side: the Graphiti MCP image in `alms-memory` makes `add_memory` closed by default (`GRAPHITI_WRITE_GUARD=notes-only`) — only `-notes` groups and `GRAPHITI_WRITE_ALLOWLIST` entries are accepted, for every client. Run both.
