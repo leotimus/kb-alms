@@ -12,7 +12,7 @@ Two persistent memory systems coexist. Use the right one or both:
 | System | Use for | Cost |
 |---|---|---|
 | **File memory** (`~/.ccs/.../memory/MEMORY.md` + per-fact `.md`) | Stable, cross-project facts: *user* preferences, persistent gotchas, references to external systems. Loaded into every conversation. | Cheap to load, doesn't scale past ~150-char index lines. |
-| **kb graph** (`memory` MCP — `add_memory`, `search_nodes`, `search_memory_facts`) | Project-specific knowledge that benefits from semantic search and contradiction handling: `ArchitecturalDecision`, `CodePattern`, `APISurface`, `Dependency`, `BugPattern`, `ProjectConfig`, `TeamPreference`, `Event`, `Topic`. Queried on demand. | Pays a round-trip + ~10 entity summaries per query. Free to grow large. |
+| **kb graph** (`memory` MCP — write: `add_memory`; semantic read: `search_nodes`, `search_memory_facts`; browse/discover: `list_groups`, `get_episodes`) | Project-specific knowledge that benefits from semantic search and contradiction handling: `ArchitecturalDecision`, `CodePattern`, `APISurface`, `Dependency`, `BugPattern`, `ProjectConfig`, `TeamPreference`, `Event`, `Topic`. Queried on demand. | Pays a round-trip + ~10 entity summaries per query. Free to grow large. |
 
 **Default placement:** project-scoped → graph; user-scoped or cross-project → file. **Exception:** a high-priority cross-project gotcha (e.g. `COPYFILE_DISABLE=1` for macOS-tar-to-Linux) may live in *both* — file for guaranteed recall, graph in a `team-prefs` group for semantic discovery. Treat duplication as a deliberate exception, not the default.
 
@@ -34,6 +34,10 @@ Two persistent memory systems coexist. Use the right one or both:
 1. `search_nodes` first with 2–4 keywords from the prompt, filtered by relevant `group_ids` (the project group + its `-docs` sibling, plus any cross-project group like `team-prefs`).
 2. If matches look promising, follow up with `search_memory_facts` on the strongest entity names to pull relationships.
 3. Review any `ArchitecturalDecision` or `TeamPreference` nodes returned — these are committed decisions; don't contradict without flagging.
+
+**Discover & browse (not semantic):**
+- `list_groups()` — enumerate every `group_id` in the graph with `episode_count` + `latest_episode_at` (newest first; `counts=True` adds `entity_count`). Use it when you're unsure which groups exist for this project, or to sanity-check that the indexed corpus you expect is actually there before searching.
+- `get_episodes(group_ids=[...], max_episodes=N, offset=M, include_content=False)` — list episodes newest-first. With **no** `group_ids` it spans the whole graph (latest activity anywhere). This is chronological browsing — "what was recorded recently" — not semantic lookup; reach for `search_nodes` / `search_memory_facts` for that. `include_content=False` keeps the response cheap when you only need titles/sources.
 
 **Group convention (read-many, write-one):**
 
